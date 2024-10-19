@@ -24,3 +24,11 @@ SELECT AVG(Sleep_Quality) AS Avg_Sleep_Quality
 FROM employees
 WHERE Stress_Level = 'High'
   AND Access_to_Mental_Health_Resources = 'No';
+--This query creates a view summarizing the relationship between work location and mental health conditions for further analysis.
+CREATE VIEW Work_Location_Mental_Health AS
+SELECT Work_Location, 
+       Mental_Health_Condition, 
+       COUNT(Employee_ID) AS Total_Employees
+FROM employees
+WHERE Mental_Health_Condition IS NOT NULL
+GROUP BY Work_Location, Mental_Health_Condition;

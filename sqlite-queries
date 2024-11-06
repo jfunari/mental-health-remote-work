@@ -1,21 +1,21 @@
 --This query retrieves a list of employees working remotely along with their job roles and work-life balance ratings.
 SELECT Employee_ID, Job_Role, Work_Life_Balance_Rating
-FROM Impact_Remote_Work_vs_Mental_Health
+FROM remote_work_vs_mental_health.remote_and_mental_health
 WHERE Work_Location = 'Remote'
 --This query calculate the average stress level and work-life balance for employees in different work locations.
 SELECT Work_Location, 
        AVG(Stress_Level) AS Avg_Stress_Level, 
        AVG(Work_Life_Balance_Rating) AS Avg_Work_Life_Balance
-FROM Impact_Remote_Work_vs_Mental_Health
+FROM remote_work_vs_mental_health.remote_and_mental_health
 GROUP BY Work_Location;
 -- This query Identify employees with mental health conditions who do not have access to mental health resources and their respective regions.
 SELECT Employee_ID, Mental_Health_Condition, Region
-FROM Impact_Remote_Work_vs_Mental_Health
+FROM remote_work_vs_mental_health.remote_and_mental_health
 WHERE Access_to_Mental_Health_Resources = 'No'
   AND Mental_Health_Condition IS NOT NULL;
 --This query filters employees who reported a decrease in productivity and have high social isolation ratings, sorted by stress level.
 SELECT Employee_ID, Job_Role, Stress_Level, Productivity_Change, Social_Isolation_Rating
-FROM Impact_Remote_Work_vs_Mental_Health
+FROM remote_work_vs_mental_health.remote_and_mental_health
 WHERE Productivity_Change = 'Decrease' 
   AND Social_Isolation_Rating >= 3
 ORDER BY Stress_Level DESC;
@@ -24,6 +24,6 @@ CREATE VIEW Work_Location_Mental_Health AS
 SELECT Work_Location, 
        Mental_Health_Condition, 
        COUNT(Employee_ID) AS Total_Employees
-FROM Impact_Remote_Work_vs_Mental_Health
+FROM remote_work_vs_mental_health.remote_and_mental_health
 WHERE Mental_Health_Condition IS NOT NULL
 GROUP BY Work_Location, Mental_Health_Condition;

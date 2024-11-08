@@ -1,29 +1,34 @@
---This query retrieves a list of employees working remotely along with their job roles and work-life balance ratings.
-SELECT Employee_ID, Job_Role, Work_Life_Balance_Rating
-FROM remote_work_vs_mental_health.remote_and_mental_health
-WHERE Work_Location = 'Remote'
---This query calculate the average stress level and work-life balance for employees in different work locations.
-SELECT Work_Location, 
-       AVG(Stress_Level) AS Avg_Stress_Level, 
-       AVG(Work_Life_Balance_Rating) AS Avg_Work_Life_Balance
-FROM remote_work_vs_mental_health.remote_and_mental_health
-GROUP BY Work_Location;
--- This query Identify employees with mental health conditions who do not have access to mental health resources and their respective regions.
-SELECT Employee_ID, Mental_Health_Condition, Region
-FROM remote_work_vs_mental_health.remote_and_mental_health
-WHERE Access_to_Mental_Health_Resources = 'No'
-  AND Mental_Health_Condition IS NOT NULL;
---This query filters employees who reported a decrease in productivity and have high social isolation ratings, sorted by stress level.
-SELECT Employee_ID, Job_Role, Stress_Level, Productivity_Change, Social_Isolation_Rating
-FROM remote_work_vs_mental_health.remote_and_mental_health
-WHERE Productivity_Change = 'Decrease' 
-  AND Social_Isolation_Rating >= 3
-ORDER BY Stress_Level DESC;
---This query creates a view summarizing the relationship between work location and mental health conditions for further analysis.
-CREATE VIEW Work_Location_Mental_Health AS
-SELECT Work_Location, 
-       Mental_Health_Condition, 
-       COUNT(Employee_ID) AS Total_Employees
-FROM remote_work_vs_mental_health.remote_and_mental_health
-WHERE Mental_Health_Condition IS NOT NULL
-GROUP BY Work_Location, Mental_Health_Condition;
+-- This query will give a list of employees that have high stress, decreased productivity and a work-life balance that is below 3 on scale of 1-5 therefore low work life balance
+SELECT Employee_ID, Work_Location, Work_Life_Balance_Rating
+FROM Impact_Remote_Work_vs_Mental_Health
+WHERE stress_level = 'High'
+AND productivity_change = 'Decrease'
+AND work_life_balance_rating <= 3
+AND access_to_mental_health_resources = 'No'
+GROUP BY Employee_ID;
+-- This query will generate a list of employees with high stress, low productivity and their rating of sleep quality
+SELECT Employee_ID, Sleep_Quality, work_location, access_to_mental_health_resources
+FROM Impact_Remote_Work_vs_Mental_Health
+WHERE Stress_Level = 'High'
+AND productivity_change = 'Decrease'
+GROUP BY employee_id;
+-- work location and access to mental health resources with high social isolation rating, high stress and low productivity
+SELECT employee_id, work_location, social_isolation_rating, access_to_mental_health_resources
+FROM Impact_Remote_Work_vs_Mental_Health
+Where social_isolation_rating >= 3
+AND productivity_change = 'Decrease'
+AND stress_level = 'High'
+Group BY employee_id;
+-- access to mental health resources by gender and work location based on high stress and decreased productivity
+SELECT employee_id, gender, work_location, access_to_mental_health_resources
+FROM Impact_Remote_Work_vs_Mental_Health
+WHERE stress_level = 'High'
+AND productivity_change = 'Decrease'
+Group BY employee_id;
+-- access to mental health resources by region, work location with high stress, low work life balance and decreased productivity
+SELECT employee_id, region, work_location, access_to_mental_health_resources, work_life_balance_rating
+from Impact_Remote_Work_vs_Mental_Health
+Where stress_level = 'High'
+AND productivity_change = 'Decrease'
+AND work_life_balance_rating <= 3
+Group BY employee_id;
